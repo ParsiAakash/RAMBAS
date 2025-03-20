@@ -188,13 +188,17 @@
 
             <button type="submit">Submit</button>
         </form>
+        <div id="messageBox" style="display: none; padding: 10px; margin-top: 10px; border-radius: 5px;"></div>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById("healthForm").addEventListener("submit", async function(event) {
+            const form = document.getElementById("healthForm");
+            const messageBox = document.getElementById("messageBox");
+    
+            form.addEventListener("submit", async function(event) {
                 event.preventDefault(); // Prevent form submission
-
+    
                 const formData = {
                     name: document.getElementById("name").value,
                     date: document.getElementById("date").value,
@@ -211,10 +215,9 @@
                     water: document.getElementById("water").value,
                     tea: document.getElementById("tea").value
                 };
-
+    
                 console.log("📝 Form Data:", formData);
-
-                // Send data to backend
+    
                 try {
                     const response = await fetch("https://rambas.onrender.com/api/save", {
                         method: "POST",
@@ -223,17 +226,31 @@
                         },
                         body: JSON.stringify(formData),
                     });
-
+    
                     const result = await response.json();
+    
                     if (response.ok) {
-                        alert("✅ Data saved successfully!");
+                        showMessage("✅ Form submitted successfully!", "green");
+                        form.reset(); // Clear form fields on success
                     } else {
-                        alert("❌ Error: " + result.error);
+                        showMessage("❌ Error: " + result.error, "red");
                     }
                 } catch (error) {
                     console.error("❌ Error submitting form:", error);
+                    showMessage("❌ Something went wrong. Please try again.", "red");
                 }
             });
+    
+            function showMessage(message, color) {
+                messageBox.style.display = "block";
+                messageBox.style.backgroundColor = color;
+                messageBox.style.color = "white";
+                messageBox.innerText = message;
+    
+                setTimeout(() => {
+                    messageBox.style.display = "none";
+                }, 3000); // Hide message after 3 seconds
+            }
         });
     </script>
 
