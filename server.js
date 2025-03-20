@@ -9,8 +9,11 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+const mongo_username = process.env.MONGO_USERNAME;
+const mongo_password = process.env.MONGO_PASSWORD;
+
 // Connect to MongoDB
-mongoose.connect("mongodb://localhost:27017/rambas", {
+mongoose.connect(`mongodb+srv://${mongo_username}:${mongo_password}@rambas.0w1tj.mongodb.net/?retryWrites=true&w=majority&appName=RAMBAS`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => console.log("✅ MongoDB Connected"))
