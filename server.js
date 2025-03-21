@@ -34,7 +34,9 @@ const healthSchema = new mongoose.Schema({
     alcohol: String,
     tobacco: String,
     water: Number,
-    tea: Number
+    tea: Number,
+    cigarettes: Number,
+    pegs: Number,
 });
 
 const HealthData = mongoose.model("HealthData", healthSchema);
