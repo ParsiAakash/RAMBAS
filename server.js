@@ -42,13 +42,28 @@ const healthSchema = new mongoose.Schema({
 const HealthData = mongoose.model("HealthData", healthSchema);
 
 // POST route to save form data
+// app.post("/api/save", async (req, res) => {
+//     try {
+//         const newEntry = new HealthData(req.body);
+//         await newEntry.save();
+//         res.status(201).json({ message: "Data saved successfully!" });
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// });
+
 app.post("/api/save", async (req, res) => {
     try {
-        const newEntry = new HealthData(req.body);
-        await newEntry.save();
-        res.status(201).json({ message: "Data saved successfully!" });
+        const { name, date, ...updateData } = req.body; // Extract name and date
+
+        const updatedEntry = await HealthData.findOneAndUpdate(
+            { name, date },  // Find by name & date
+            { $set: updateData },  // Update other fields
+            { upsert: true, new: true }  // Create if not found, return updated document
+        );
+        res.status(200).json({ success: true, data: updatedEntry });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ success: false, error: error.message });
     }
 });
 
